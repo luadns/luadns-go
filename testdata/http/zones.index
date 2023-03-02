@@ -1,0 +1,13 @@
+HTTP/1.0 200 OK
+Cache-Control: no-cache, no-store, no-transform, must-revalidate, private, max-age=0
+Content-Length: 172
+Content-Type: application/json; charset=utf-8
+Date: Fri, 25 Aug 2023 14:43:03 GMT
+Expires: Thu, 01 Jan 1970 02:00:00 EET
+Pragma: no-cache
+X-Accel-Expires: 0
+X-Ratelimit-Limit: 1200
+X-Ratelimit-Remaining: 1200
+X-Ratelimit-Reset: 1692974700
+
+[{"id":5,"name":"example.org","template_id":0,"synced":false,"queries_count":0,"records_count":11,"aliases_count":0,"redirects_count":0,"forwards_count":0,"records":null}]

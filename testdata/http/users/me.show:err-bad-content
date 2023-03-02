@@ -1,0 +1,13 @@
+HTTP/1.0 200 OK
+Cache-Control: no-cache, no-store, no-transform, must-revalidate, private, max-age=0
+Content-Length: 609
+Content-Type: text/html
+Date: Fri, 25 Aug 2023 14:48:07 GMT
+Expires: Thu, 01 Jan 1970 02:00:00 EET
+Pragma: no-cache
+X-Accel-Expires: 0
+X-Ratelimit-Limit: 1200
+X-Ratelimit-Remaining: 1198
+X-Ratelimit-Reset: 1692975000
+
+{"email":"joe@example.com","name":"Example User","repo_uri":"","api_enabled":true,"tfa":false,"deploy_key":"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCnxpLnmNsKIAHuTED3ReOTlN3cNcumxSr/a3NGRFLmKri/GbU0Jr/CfhAG+JWjVAEY//zsrGUSNtPxZ/8VNgQbCWOZw3koOa73G8ap9NSNBJQEn/xmMBHjAAZc4LNRxfKF0BR7Mw7sT0G9RnUmE5OE3ZwO0GaKr9uAyHWCjkKlJK9XuLKhmXVKI5JJoDbjENIxKzZ+WUKYbm/Wt7NgvgPL8pIBcPiJ0CNRPvKbbrHUO8WHe7WQezUoizAaQzOu3EjyN414+12B0Zq/X5CBJq+Z4uftlrONhz5K1a8iRJwP0QibGZH0uDxP/x41w94ZYCzOFv+rmI3L+vp7oj90lEfj\n","ttl":300,"package":"Free","name_servers":["ns1.luadns.net.","ns2.luadns.net.","ns3.luadns.net.","ns4.luadns.net."]}

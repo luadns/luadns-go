@@ -1,0 +1,14 @@
+HTTP/1.0 429 Too Many Requests
+Cache-Control: no-cache, no-store, no-transform, must-revalidate, private, max-age=0
+Content-Length: 107
+Content-Type: application/json; charset=utf-8
+Date: Mon, 28 Aug 2023 11:11:55 GMT
+Expires: Thu, 01 Jan 1970 02:00:00 EET
+Pragma: no-cache
+Retry-After: 300
+X-Accel-Expires: 0
+X-Ratelimit-Limit: 3
+X-Ratelimit-Remaining: 0
+X-Ratelimit-Reset: 1693221300
+
+{"status":"Too Many Requests","request_id":"apollo.local/ztHMmU9StQ-000003","message":"Too Many Requests"}

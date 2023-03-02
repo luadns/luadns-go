@@ -1,0 +1,13 @@
+HTTP/1.0 200 OK
+Cache-Control: no-cache, no-store, no-transform, must-revalidate, private, max-age=0
+Content-Length: 205
+Content-Type: application/json; charset=utf-8
+Date: Fri, 25 Aug 2023 15:10:16 GMT
+Expires: Thu, 01 Jan 1970 02:00:00 EET
+Pragma: no-cache
+X-Accel-Expires: 0
+X-Ratelimit-Limit: 1200
+X-Ratelimit-Remaining: 1200
+X-Ratelimit-Reset: 1692976500
+
+{"id":115087858,"name":"example.org.","type":"TXT","content":"Hello, world!","ttl":3600,"zone_id":5,"generated":false,"created_at":"2023-08-25T15:10:16.872781Z","updated_at":"2023-08-25T15:10:16.872781Z"}
