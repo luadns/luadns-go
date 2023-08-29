@@ -4,6 +4,7 @@ This is the Go client for [LuaDNS REST API](https://www.luadns.com/api.html).
 
 
 [![Build Status](https://github.com/luadns/luadns-go/actions/workflows/ci.yml/badge.svg)](https://github.com/luadns/luadns-go/actions/workflows/ci.yml)
+[![GoDoc](https://godoc.org/github.com/luadns/luadns-go?status.svg)](https://godoc.org/github.com/luadns/luadns-go)
 
 
 Usage:
