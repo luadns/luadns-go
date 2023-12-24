@@ -64,7 +64,7 @@ func main() {
 
 ## Example
 ```
-$ go run examples/main.go -key=YOUR_EMAIL -key=YOUR_API_KEY
+$ go run examples/main.go -email=YOUR_EMAIL -key=YOUR_API_KEY
 email:   joe@example.com
 name:    Example User
 package: Free
