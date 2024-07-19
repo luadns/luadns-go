@@ -18,7 +18,7 @@ func TestListRecordsEndpoint(t *testing.T) {
 
 	c := luadns.NewClient(context.Background(), "joe@example.com", "password", luadns.SetBaseURL(server.URL))
 
-	records, err := c.ListRecords(&luadns.Zone{ID: 5})
+	records, err := c.ListRecords(&luadns.Zone{ID: 5}, &luadns.ListParams{Query: "example.org."})
 	assert.NoError(t, err)
 	assert.Len(t, records, 11)
 

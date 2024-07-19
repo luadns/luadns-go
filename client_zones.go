@@ -1,13 +1,22 @@
 package luadns
 
+import (
+	"net/url"
+)
+
 // ListZones returns user zones.
 //
 // See: http://www.luadns.com/api.html#list-zones
-func (c *Client) ListZones() ([]*Zone, error) {
+func (c *Client) ListZones(options *ListParams, handlers ...HandlerFunc) ([]*Zone, error) {
 	zones := []*Zone{}
 
 	req := func() ([]byte, error) {
-		return c.client.Get(c.endpoint("/zones"))
+		uri := &url.URL{
+			Path:     "/zones",
+			RawQuery: options.QueryString(),
+		}
+
+		return c.client.Get(c.endpoint(uri.String()), handlers...)
 	}
 
 	err := c.do(req, &zones)

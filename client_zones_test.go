@@ -18,7 +18,7 @@ func TestListZonesEndpoint(t *testing.T) {
 
 	c := luadns.NewClient(context.Background(), "joe@example.com", "password", luadns.SetBaseURL(server.URL))
 
-	zones, err := c.ListZones()
+	zones, err := c.ListZones(&luadns.ListParams{Query: "example.com"})
 	assert.NoError(t, err)
 	assert.Len(t, zones, 1)
 

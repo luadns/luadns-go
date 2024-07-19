@@ -46,7 +46,7 @@ func NewAuthJSONClient(ctx context.Context, username, password string) *JSONClie
 }
 
 // Post executes a POST request using JSON body and returns JSON response.
-func (c *JSONClient) Post(url string, attrs interface{}) ([]byte, error) {
+func (c *JSONClient) Post(url string, attrs interface{}, handlers ...HandlerFunc) ([]byte, error) {
 	json, err := c.marshalJSON(attrs)
 	if err != nil {
 		return nil, err
@@ -58,21 +58,21 @@ func (c *JSONClient) Post(url string, attrs interface{}) ([]byte, error) {
 		return nil, err
 	}
 
-	return c.do(req)
+	return c.do(req, handlers...)
 }
 
 // Get executes a GET request and returns JSON response.
-func (c *JSONClient) Get(url string) ([]byte, error) {
+func (c *JSONClient) Get(url string, handlers ...HandlerFunc) ([]byte, error) {
 	req, err := http.NewRequestWithContext(c.ctx, http.MethodGet, url, http.NoBody)
 	if err != nil {
 		return nil, err
 	}
 
-	return c.do(req)
+	return c.do(req, handlers...)
 }
 
 // Put executes a PUT request using JSON body and returns JSON response.
-func (c *JSONClient) Put(url string, data interface{}) ([]byte, error) {
+func (c *JSONClient) Put(url string, data interface{}, handlers ...HandlerFunc) ([]byte, error) {
 	json, err := c.marshalJSON(data)
 	if err != nil {
 		return nil, err
@@ -84,20 +84,20 @@ func (c *JSONClient) Put(url string, data interface{}) ([]byte, error) {
 		return nil, err
 	}
 
-	return c.do(req)
+	return c.do(req, handlers...)
 }
 
 // Delete executes a DELETE request and returns JSON response.
-func (c *JSONClient) Delete(url string) ([]byte, error) {
+func (c *JSONClient) Delete(url string, handlers ...HandlerFunc) ([]byte, error) {
 	req, err := http.NewRequestWithContext(c.ctx, http.MethodDelete, url, http.NoBody)
 	if err != nil {
 		return nil, err
 	}
-	return c.do(req)
+	return c.do(req, handlers...)
 }
 
 // do executes HTTP request, checks for proper response and returns the response body.
-func (c *JSONClient) do(req *http.Request) ([]byte, error) {
+func (c *JSONClient) do(req *http.Request, handlers ...HandlerFunc) ([]byte, error) {
 	resp, err := c.client.Do(req)
 	if err != nil {
 		return nil, err
@@ -117,6 +117,11 @@ func (c *JSONClient) do(req *http.Request) ([]byte, error) {
 	contentType := resp.Header.Get("Content-Type")
 	if !strings.HasPrefix(contentType, jsonMime) {
 		return nil, &ErrBadContentType{ContentType: contentType}
+	}
+
+	// Run response handlers.
+	for _, h := range handlers {
+		h(resp)
 	}
 
 	return body, nil

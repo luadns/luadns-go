@@ -1,13 +1,23 @@
 package luadns
 
+import (
+	"fmt"
+	"net/url"
+)
+
 // ListRecords returns zone records.
 //
 // See: http://www.luadns.com/api.html#list-records
-func (c *Client) ListRecords(zone *Zone) ([]*Record, error) {
+func (c *Client) ListRecords(zone *Zone, options *ListParams, handlers ...HandlerFunc) ([]*Record, error) {
 	records := []*Record{}
 
 	req := func() ([]byte, error) {
-		return c.client.Get(c.endpoint("/zones/%d/records", zone.ID))
+		uri := &url.URL{
+			Path:     fmt.Sprintf("/zones/%d/records", zone.ID),
+			RawQuery: options.QueryString(),
+		}
+
+		return c.client.Get(c.endpoint(uri.String()), handlers...)
 	}
 
 	err := c.do(req, &records)

@@ -37,14 +37,15 @@ func main() {
 	fmt.Println("name:   ", user.Name)
 	fmt.Println("package:", user.Package)
 
-	zones, err := c.ListZones()
+	var meta api.ListMeta
+	zones, err := c.ListZones(&api.ListParams{}, api.GetListMeta(&meta))
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	for _, z := range zones {
 		fmt.Println("===> zone", z.Name)
-		records, err := c.ListRecords(z)
+		records, err := c.ListRecords(z, &api.ListParams{})
 		if err != nil {
 			log.Fatalln(err)
 		}
