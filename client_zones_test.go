@@ -40,6 +40,7 @@ func TestCreateZoneEndpoint(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, zone.ID, int64(75247))
 	assert.Equal(t, zone.Name, "example.dev")
+	assert.Len(t, zone.Records, 5)
 }
 
 func TestGetZoneEndpoint(t *testing.T) {
@@ -54,6 +55,7 @@ func TestGetZoneEndpoint(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, zone.ID, int64(5))
 	assert.Equal(t, zone.Name, "example.org")
+	assert.Len(t, zone.Records, 11)
 }
 
 func TestUpdateZoneEndpoint(t *testing.T) {
@@ -69,6 +71,7 @@ func TestUpdateZoneEndpoint(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, zone.ID, int64(5))
 	assert.Equal(t, zone.Name, "example.org")
+	assert.Len(t, zone.Records, 5)
 }
 
 func TestDeleteZoneEndpoint(t *testing.T) {
@@ -83,4 +86,5 @@ func TestDeleteZoneEndpoint(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, zone.ID, int64(5))
 	assert.Equal(t, zone.Name, "example.org")
+	assert.Len(t, zone.Records, 11)
 }
