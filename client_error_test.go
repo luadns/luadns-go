@@ -16,9 +16,9 @@ func TestBadStatusCodeResponse(t *testing.T) {
 	}))
 	defer server.Close()
 
-	c := luadns.NewClient(context.Background(), "joe@example.com", "password", luadns.SetBaseURL(server.URL))
+	c := luadns.NewClient("joe@example.com", "password", luadns.SetBaseURL(server.URL))
 
-	_, err := c.Me()
+	_, err := c.Me(context.Background())
 	assert.Error(t, err)
 	assert.EqualError(t, err, "Server returned bad status code (502)")
 }
@@ -29,9 +29,9 @@ func TestBadContentResponse(t *testing.T) {
 	}))
 	defer server.Close()
 
-	c := luadns.NewClient(context.Background(), "joe@example.com", "password", luadns.SetBaseURL(server.URL))
+	c := luadns.NewClient("joe@example.com", "password", luadns.SetBaseURL(server.URL))
 
-	_, err := c.Me()
+	_, err := c.Me(context.Background())
 	assert.Error(t, err)
 	assert.EqualError(t, err, "Server returned bad content type (text/html)")
 }
@@ -42,9 +42,9 @@ func TestRateLimitedResponse(t *testing.T) {
 	}))
 	defer server.Close()
 
-	c := luadns.NewClient(context.Background(), "joe@example.com", "password", luadns.SetBaseURL(server.URL))
+	c := luadns.NewClient("joe@example.com", "password", luadns.SetBaseURL(server.URL))
 
-	_, err := c.Me()
+	_, err := c.Me(context.Background())
 	assert.EqualError(t, err, "Too many requests, retry after 1693221300 unix time")
 
 	rerr := err.(*luadns.ErrTooManyRequests)

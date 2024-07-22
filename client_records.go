@@ -1,6 +1,7 @@
 package luadns
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 )
@@ -8,19 +9,19 @@ import (
 // ListRecords returns zone records.
 //
 // See: http://www.luadns.com/api.html#list-records
-func (c *Client) ListRecords(zone *Zone, options *ListParams, handlers ...HandlerFunc) ([]*Record, error) {
+func (c *Client) ListRecords(ctx context.Context, zone *Zone, options *ListParams, handlers ...HandlerFunc) ([]*Record, error) {
 	records := []*Record{}
 
-	req := func() ([]byte, error) {
+	req := func(ctx context.Context) ([]byte, error) {
 		uri := &url.URL{
 			Path:     fmt.Sprintf("/zones/%d/records", zone.ID),
 			RawQuery: options.QueryString(),
 		}
 
-		return c.client.Get(c.endpoint(uri.String()), handlers...)
+		return c.client.Get(ctx, c.endpoint(uri.String()), handlers...)
 	}
 
-	err := c.do(req, &records)
+	err := c.do(ctx, req, &records)
 	if err != nil {
 		return nil, err
 	}
@@ -31,14 +32,14 @@ func (c *Client) ListRecords(zone *Zone, options *ListParams, handlers ...Handle
 // CreateRecord creates a zone record using supplied attributes.
 //
 // See: http://www.luadns.com/api.html#create-a-record
-func (c *Client) CreateRecord(zone *Zone, attrs *Record) (*Record, error) {
+func (c *Client) CreateRecord(ctx context.Context, zone *Zone, attrs *Record) (*Record, error) {
 	var record Record
 
-	req := func() ([]byte, error) {
-		return c.client.Post(c.endpoint("/zones/%d/records", zone.ID), attrs)
+	req := func(ctx context.Context) ([]byte, error) {
+		return c.client.Post(ctx, c.endpoint("/zones/%d/records", zone.ID), attrs)
 	}
 
-	err := c.do(req, &record)
+	err := c.do(ctx, req, &record)
 	if err != nil {
 		return nil, err
 	}
@@ -49,14 +50,14 @@ func (c *Client) CreateRecord(zone *Zone, attrs *Record) (*Record, error) {
 // GetRecord returns a zone record identified by `recordID`.
 //
 // See: http://www.luadns.com/api.html#get-a-record
-func (c *Client) GetRecord(zone *Zone, recordID int64) (*Record, error) {
+func (c *Client) GetRecord(ctx context.Context, zone *Zone, recordID int64) (*Record, error) {
 	var record Record
 
-	req := func() ([]byte, error) {
-		return c.client.Get(c.endpoint("/zones/%d/records/%d", zone.ID, recordID))
+	req := func(ctx context.Context) ([]byte, error) {
+		return c.client.Get(ctx, c.endpoint("/zones/%d/records/%d", zone.ID, recordID))
 	}
 
-	err := c.do(req, &record)
+	err := c.do(ctx, req, &record)
 	if err != nil {
 		return nil, err
 	}
@@ -67,14 +68,14 @@ func (c *Client) GetRecord(zone *Zone, recordID int64) (*Record, error) {
 // UpdateRecord updates a zone record identfied by `recordID` using supplied attributes.
 //
 // See: http://www.luadns.com/api.html#update-a-record
-func (c *Client) UpdateRecord(zone *Zone, recordID int64, attrs *Record) (*Record, error) {
+func (c *Client) UpdateRecord(ctx context.Context, zone *Zone, recordID int64, attrs *Record) (*Record, error) {
 	var record Record
 
-	req := func() ([]byte, error) {
-		return c.client.Put(c.endpoint("/zones/%d/records/%d", zone.ID, recordID), attrs)
+	req := func(ctx context.Context) ([]byte, error) {
+		return c.client.Put(ctx, c.endpoint("/zones/%d/records/%d", zone.ID, recordID), attrs)
 	}
 
-	err := c.do(req, &record)
+	err := c.do(ctx, req, &record)
 	if err != nil {
 		return nil, err
 	}
@@ -85,14 +86,14 @@ func (c *Client) UpdateRecord(zone *Zone, recordID int64, attrs *Record) (*Recor
 // DeleteRecord deletes a zone record identfied by `recordID`.
 //
 // See: http://www.luadns.com/api.html#delete-a-record
-func (c *Client) DeleteRecord(zone *Zone, recordID int64) (*Record, error) {
+func (c *Client) DeleteRecord(ctx context.Context, zone *Zone, recordID int64) (*Record, error) {
 	var record Record
 
-	req := func() ([]byte, error) {
-		return c.client.Delete(c.endpoint("/zones/%d/records/%d", zone.ID, recordID))
+	req := func(ctx context.Context) ([]byte, error) {
+		return c.client.Delete(ctx, c.endpoint("/zones/%d/records/%d", zone.ID, recordID))
 	}
 
-	err := c.do(req, &record)
+	err := c.do(ctx, req, &record)
 	if err != nil {
 		return nil, err
 	}

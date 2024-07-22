@@ -16,9 +16,8 @@ func TestListRecordsEndpoint(t *testing.T) {
 	}))
 	defer server.Close()
 
-	c := luadns.NewClient(context.Background(), "joe@example.com", "password", luadns.SetBaseURL(server.URL))
-
-	records, err := c.ListRecords(&luadns.Zone{ID: 5}, &luadns.ListParams{Query: "example.org."})
+	c := luadns.NewClient("joe@example.com", "password", luadns.SetBaseURL(server.URL))
+	records, err := c.ListRecords(context.Background(), &luadns.Zone{ID: 5}, &luadns.ListParams{Query: "example.org."})
 	assert.NoError(t, err)
 	assert.Len(t, records, 11)
 
@@ -36,10 +35,10 @@ func TestCreateRecordEndpoint(t *testing.T) {
 	}))
 	defer server.Close()
 
-	c := luadns.NewClient(context.Background(), "joe@example.com", "password", luadns.SetBaseURL(server.URL))
+	c := luadns.NewClient("joe@example.com", "password", luadns.SetBaseURL(server.URL))
 	f := &luadns.Record{Name: "example.org.", Type: "TXT", Content: "Hello, world!", TTL: 3600}
 
-	record, err := c.CreateRecord(&luadns.Zone{ID: 5}, f)
+	record, err := c.CreateRecord(context.Background(), &luadns.Zone{ID: 5}, f)
 	assert.NoError(t, err)
 	assert.Equal(t, record.ID, int64(115087858))
 	assert.Equal(t, record.Name, "example.org.")
@@ -54,9 +53,9 @@ func TestGetRecordEndpoint(t *testing.T) {
 	}))
 	defer server.Close()
 
-	c := luadns.NewClient(context.Background(), "joe@example.com", "password", luadns.SetBaseURL(server.URL))
+	c := luadns.NewClient("joe@example.com", "password", luadns.SetBaseURL(server.URL))
 
-	record, err := c.GetRecord(&luadns.Zone{ID: 5}, 115014348)
+	record, err := c.GetRecord(context.Background(), &luadns.Zone{ID: 5}, 115014348)
 	assert.NoError(t, err)
 	assert.Equal(t, record.ID, int64(115014348))
 	assert.Equal(t, record.Name, "example.org.")
@@ -71,10 +70,10 @@ func TestUpdateRecordEndpoint(t *testing.T) {
 	}))
 	defer server.Close()
 
-	c := luadns.NewClient(context.Background(), "joe@example.com", "password", luadns.SetBaseURL(server.URL))
+	c := luadns.NewClient("joe@example.com", "password", luadns.SetBaseURL(server.URL))
 	f := &luadns.Record{Name: "example.org.", Type: "A", Content: "2.2.2.2", TTL: 86400}
 
-	record, err := c.UpdateRecord(&luadns.Zone{ID: 5}, 115014348, f)
+	record, err := c.UpdateRecord(context.Background(), &luadns.Zone{ID: 5}, 115014348, f)
 	assert.NoError(t, err)
 	assert.Equal(t, record.ID, int64(115014348))
 	assert.Equal(t, record.Name, "example.org.")
@@ -89,9 +88,9 @@ func TestDeleteRecordEndpoint(t *testing.T) {
 	}))
 	defer server.Close()
 
-	c := luadns.NewClient(context.Background(), "joe@example.com", "password", luadns.SetBaseURL(server.URL))
+	c := luadns.NewClient("joe@example.com", "password", luadns.SetBaseURL(server.URL))
 
-	record, err := c.DeleteRecord(&luadns.Zone{ID: 5}, 115014348)
+	record, err := c.DeleteRecord(context.Background(), &luadns.Zone{ID: 5}, 115014348)
 	assert.NoError(t, err)
 	assert.Equal(t, record.ID, int64(115014348))
 	assert.Equal(t, record.Name, "example.org.")

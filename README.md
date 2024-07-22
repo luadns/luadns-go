@@ -34,8 +34,10 @@ func main() {
 	}
 	flag.Parse()
 
-	c := api.NewClient(context.Background(), email, key)
-	user, err := c.Me()
+	ctx := context.Background()
+
+	c := api.NewClient(email, key)
+	user, err := c.Me(ctx)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -43,14 +45,14 @@ func main() {
 	fmt.Println("name:   ", user.Name)
 	fmt.Println("package:", user.Package)
 
-	zones, err := c.ListZones(&api.ListParams{Query: "example.org"})
+	zones, err := c.ListZones(ctx, &api.ListParams{Query: "example.org"})
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	for _, z := range zones {
 		fmt.Println("===> zone", z.Name)
-		records, err := c.ListRecords(z, &api.ListParams{})
+		records, err := c.ListRecords(ctx, z, &api.ListParams{})
 		if err != nil {
 			log.Fatalln(err)
 		}

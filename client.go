@@ -17,7 +17,7 @@ func SetBaseURL(url string) OptFunc {
 }
 
 // RestCallFunc represents a call to REST API.
-type RestCallFunc func() ([]byte, error)
+type RestCallFunc func(ctx context.Context) ([]byte, error)
 
 // Client represents a REST API client for LuaDNS API.
 type Client struct {
@@ -25,11 +25,11 @@ type Client struct {
 	client  *JSONClient
 }
 
-// NewClient initializes the REST API client with supplied context and configures authentication.
-func NewClient(ctx context.Context, email, apiKey string, opts ...OptFunc) *Client {
+// NewClient initializes the REST API client and configures authentication.
+func NewClient(email, apiKey string, opts ...OptFunc) *Client {
 	c := &Client{
 		baseURL: baseURL,
-		client:  NewAuthJSONClient(ctx, email, apiKey),
+		client:  NewAuthJSONClient(email, apiKey),
 	}
 
 	// Apply custom options.
@@ -46,8 +46,8 @@ func (c *Client) endpoint(format string, args ...any) string {
 }
 
 // do executes REST call and serializes the response into `dest` target.
-func (c *Client) do(fn RestCallFunc, dest any) error {
-	data, err := fn()
+func (c *Client) do(ctx context.Context, fn RestCallFunc, dest any) error {
+	data, err := fn(ctx)
 	if err != nil {
 		return err
 	}

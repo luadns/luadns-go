@@ -18,22 +18,20 @@ const (
 
 // JSONClient represents a REST client using JSON format.
 type JSONClient struct {
-	ctx      context.Context
 	client   *http.Client
 	username string
 	password string
 }
 
 // NewJSONClient initializes JSON client.
-func NewJSONClient(ctx context.Context, client *http.Client) *JSONClient {
+func NewJSONClient(client *http.Client) *JSONClient {
 	return &JSONClient{
-		ctx:    ctx,
 		client: client,
 	}
 }
 
 // NewAuthJSONClient initializes JSON client using Basic authentication.
-func NewAuthJSONClient(ctx context.Context, username, password string) *JSONClient {
+func NewAuthJSONClient(username, password string) *JSONClient {
 	client := &http.Client{
 		Transport: &Transport{
 			Transport: &http.Transport{},
@@ -42,18 +40,18 @@ func NewAuthJSONClient(ctx context.Context, username, password string) *JSONClie
 		},
 		Timeout: timeout,
 	}
-	return NewJSONClient(ctx, client)
+	return NewJSONClient(client)
 }
 
 // Post executes a POST request using JSON body and returns JSON response.
-func (c *JSONClient) Post(url string, attrs interface{}, handlers ...HandlerFunc) ([]byte, error) {
+func (c *JSONClient) Post(ctx context.Context, url string, attrs interface{}, handlers ...HandlerFunc) ([]byte, error) {
 	json, err := c.marshalJSON(attrs)
 	if err != nil {
 		return nil, err
 	}
 	payload := bytes.NewBuffer(json)
 
-	req, err := http.NewRequestWithContext(c.ctx, http.MethodPost, url, payload)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, payload)
 	if err != nil {
 		return nil, err
 	}
@@ -62,8 +60,8 @@ func (c *JSONClient) Post(url string, attrs interface{}, handlers ...HandlerFunc
 }
 
 // Get executes a GET request and returns JSON response.
-func (c *JSONClient) Get(url string, handlers ...HandlerFunc) ([]byte, error) {
-	req, err := http.NewRequestWithContext(c.ctx, http.MethodGet, url, http.NoBody)
+func (c *JSONClient) Get(ctx context.Context, url string, handlers ...HandlerFunc) ([]byte, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, http.NoBody)
 	if err != nil {
 		return nil, err
 	}
@@ -72,14 +70,14 @@ func (c *JSONClient) Get(url string, handlers ...HandlerFunc) ([]byte, error) {
 }
 
 // Put executes a PUT request using JSON body and returns JSON response.
-func (c *JSONClient) Put(url string, data interface{}, handlers ...HandlerFunc) ([]byte, error) {
+func (c *JSONClient) Put(ctx context.Context, url string, data interface{}, handlers ...HandlerFunc) ([]byte, error) {
 	json, err := c.marshalJSON(data)
 	if err != nil {
 		return nil, err
 	}
 	payload := bytes.NewBuffer(json)
 
-	req, err := http.NewRequestWithContext(c.ctx, http.MethodPut, url, payload)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPut, url, payload)
 	if err != nil {
 		return nil, err
 	}
@@ -88,8 +86,8 @@ func (c *JSONClient) Put(url string, data interface{}, handlers ...HandlerFunc) 
 }
 
 // Delete executes a DELETE request and returns JSON response.
-func (c *JSONClient) Delete(url string, handlers ...HandlerFunc) ([]byte, error) {
-	req, err := http.NewRequestWithContext(c.ctx, http.MethodDelete, url, http.NoBody)
+func (c *JSONClient) Delete(ctx context.Context, url string, handlers ...HandlerFunc) ([]byte, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, url, http.NoBody)
 	if err != nil {
 		return nil, err
 	}

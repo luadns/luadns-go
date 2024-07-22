@@ -16,9 +16,9 @@ func TestListZonesEndpoint(t *testing.T) {
 	}))
 	defer server.Close()
 
-	c := luadns.NewClient(context.Background(), "joe@example.com", "password", luadns.SetBaseURL(server.URL))
+	c := luadns.NewClient("joe@example.com", "password", luadns.SetBaseURL(server.URL))
 
-	zones, err := c.ListZones(&luadns.ListParams{Query: "example.com"})
+	zones, err := c.ListZones(context.Background(), &luadns.ListParams{Query: "example.com"})
 	assert.NoError(t, err)
 	assert.Len(t, zones, 1)
 
@@ -33,10 +33,10 @@ func TestCreateZoneEndpoint(t *testing.T) {
 	}))
 	defer server.Close()
 
-	c := luadns.NewClient(context.Background(), "joe@example.com", "password", luadns.SetBaseURL(server.URL))
+	c := luadns.NewClient("joe@example.com", "password", luadns.SetBaseURL(server.URL))
 	f := &luadns.Zone{Name: "example.dev"}
 
-	zone, err := c.CreateZone(f)
+	zone, err := c.CreateZone(context.Background(), f)
 	assert.NoError(t, err)
 	assert.Equal(t, zone.ID, int64(75247))
 	assert.Equal(t, zone.Name, "example.dev")
@@ -48,9 +48,9 @@ func TestGetZoneEndpoint(t *testing.T) {
 	}))
 	defer server.Close()
 
-	c := luadns.NewClient(context.Background(), "joe@example.com", "password", luadns.SetBaseURL(server.URL))
+	c := luadns.NewClient("joe@example.com", "password", luadns.SetBaseURL(server.URL))
 
-	zone, err := c.GetZone(5)
+	zone, err := c.GetZone(context.Background(), 5)
 	assert.NoError(t, err)
 	assert.Equal(t, zone.ID, int64(5))
 	assert.Equal(t, zone.Name, "example.org")
@@ -62,10 +62,10 @@ func TestUpdateZoneEndpoint(t *testing.T) {
 	}))
 	defer server.Close()
 
-	c := luadns.NewClient(context.Background(), "joe@example.com", "password", luadns.SetBaseURL(server.URL))
+	c := luadns.NewClient("joe@example.com", "password", luadns.SetBaseURL(server.URL))
 	f := &luadns.Zone{Name: "example.org"}
 
-	zone, err := c.UpdateZone(5, f)
+	zone, err := c.UpdateZone(context.Background(), 5, f)
 	assert.NoError(t, err)
 	assert.Equal(t, zone.ID, int64(5))
 	assert.Equal(t, zone.Name, "example.org")
@@ -77,9 +77,9 @@ func TestDeleteZoneEndpoint(t *testing.T) {
 	}))
 	defer server.Close()
 
-	c := luadns.NewClient(context.Background(), "joe@example.com", "password", luadns.SetBaseURL(server.URL))
+	c := luadns.NewClient("joe@example.com", "password", luadns.SetBaseURL(server.URL))
 
-	zone, err := c.DeleteZone(5)
+	zone, err := c.DeleteZone(context.Background(), 5)
 	assert.NoError(t, err)
 	assert.Equal(t, zone.ID, int64(5))
 	assert.Equal(t, zone.Name, "example.org")

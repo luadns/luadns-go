@@ -16,9 +16,9 @@ func TestUsersMeEndpoint(t *testing.T) {
 	}))
 	defer server.Close()
 
-	c := luadns.NewClient(context.Background(), "joe@example.com", "password", luadns.SetBaseURL(server.URL))
+	c := luadns.NewClient("joe@example.com", "password", luadns.SetBaseURL(server.URL))
 
-	user, err := c.Me()
+	user, err := c.Me(context.Background())
 	assert.NoError(t, err)
 
 	assert.Equal(t, user.Email, "joe@example.com")

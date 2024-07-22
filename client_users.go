@@ -1,13 +1,15 @@
 package luadns
 
-func (c *Client) Me() (*User, error) {
+import "context"
+
+func (c *Client) Me(ctx context.Context) (*User, error) {
 	var user User
 
-	req := func() ([]byte, error) {
-		return c.client.Get(c.endpoint("/users/me"))
+	req := func(ctx context.Context) ([]byte, error) {
+		return c.client.Get(ctx, c.endpoint("/users/me"))
 	}
 
-	err := c.do(req, &user)
+	err := c.do(ctx, req, &user)
 	if err != nil {
 		return nil, err
 	}
