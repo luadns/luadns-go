@@ -26,12 +26,12 @@ const (
 )
 
 type Record struct {
-	ID        int64     `json:"id"`
+	ID        int64     `json:"id,omitempty"`
 	Name      string    `json:"name"`
 	Type      string    `json:"type"`
 	Content   string    `json:"content"`
 	TTL       uint32    `json:"ttl"`
 	ZoneID    int64     `json:"zone_id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	CreatedAt time.Time `json:"created_at,omitempty"`
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
 }
