@@ -1,0 +1,13 @@
+HTTP/1.1 400 Bad Request
+Cache-Control: no-cache, no-store, no-transform, must-revalidate, private, max-age=0
+Content-Length: 131
+Content-Type: application/json; charset=utf-8
+Date: Tue, 23 Jul 2024 12:56:34 GMT
+Expires: Thu, 01 Jan 1970 02:00:00 EET
+Pragma: no-cache
+X-Accel-Expires: 0
+X-Ratelimit-Limit: 1200
+X-Ratelimit-Remaining: 1200
+X-Ratelimit-Reset: 1721739600
+
+[{"classification":"DeserializationError","message":"json: cannot unmarshal number into Go struct field Zone.name of type string"}]

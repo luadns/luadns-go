@@ -107,14 +107,14 @@ func (c *JSONClient) do(req *http.Request, handlers ...HandlerFunc) ([]byte, err
 		return nil, err
 	}
 
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
 	contentType := resp.Header.Get("Content-Type")
 	if !strings.HasPrefix(contentType, jsonMime) {
 		return nil, &ErrBadContentType{ContentType: contentType}
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
 	}
 
 	// Run response handlers.
@@ -130,6 +130,28 @@ func (c *JSONClient) checkStatusCode(resp *http.Response) error {
 	switch resp.StatusCode {
 	case http.StatusOK:
 		return nil
+	case http.StatusBadRequest:
+		var herr BadRequestError
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return err
+		}
+		err = json.Unmarshal(body, &herr)
+		if err != nil {
+			return err
+		}
+		return &herr
+	case http.StatusForbidden:
+		var herr ForbiddenRequestError
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return err
+		}
+		err = json.Unmarshal(body, &herr)
+		if err != nil {
+			return err
+		}
+		return &herr
 	case http.StatusTooManyRequests:
 		limit, err := c.getRatelimitValue(resp, "X-Ratelimit-Limit")
 		if err != nil {

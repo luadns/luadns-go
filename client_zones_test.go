@@ -43,6 +43,32 @@ func TestCreateZoneEndpoint(t *testing.T) {
 	assert.Len(t, zone.Records, 5)
 }
 
+func TestCreateZoneEndpointWithInvalidData(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sendHTTPFixture(t, "/zones.create:err", w, r)
+	}))
+	defer server.Close()
+
+	c := luadns.NewClient("joe@example.com", "password", luadns.SetBaseURL(server.URL))
+	f := &luadns.Zone{Name: ""}
+
+	_, err := c.CreateZone(context.Background(), f)
+	assert.EqualError(t, err, "Invalid data for name: Required; Invalid data for name: invalid name")
+}
+
+func TestCreateZoneEndpointWithForbiddenResponse(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sendHTTPFixture(t, "/zones.create:forbidden-err", w, r)
+	}))
+	defer server.Close()
+
+	c := luadns.NewClient("joe@example.com", "password", luadns.SetBaseURL(server.URL))
+	f := &luadns.Zone{Name: "example.org"}
+
+	_, err := c.CreateZone(context.Background(), f)
+	assert.EqualError(t, err, "Forbidden: Zone 'example.org' is taken already.")
+}
+
 func TestGetZoneEndpoint(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		sendHTTPFixture(t, "/zones/5.show", w, r)
