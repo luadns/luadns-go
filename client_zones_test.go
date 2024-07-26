@@ -58,7 +58,7 @@ func TestCreateZoneEndpointWithInvalidData(t *testing.T) {
 
 func TestCreateZoneEndpointWithForbiddenResponse(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sendHTTPFixture(t, "/zones.create:forbidden-err", w, r)
+		sendHTTPFixture(t, "/zones.create:err-forbidden", w, r)
 	}))
 	defer server.Close()
 
