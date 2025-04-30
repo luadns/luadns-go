@@ -2,7 +2,15 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+  pull_request:
+    branches:
+      - '*'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
@@ -10,9 +18,8 @@ jobs:
     name: Run unit tests
 
     steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-go@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
         with:
           go-version: '1.20'
 
@@ -25,7 +32,7 @@ jobs:
         run: echo "::set-output name=dir::$(go env GOCACHE)"
 
       - name: Cache GOPATH folder
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.gopath.outputs.dir }}
           key: ${{ runner.os }}-gopath-${{ hashFiles(format('{0}{1}', github.workspace, '/go.sum')) }}
@@ -33,7 +40,7 @@ jobs:
             ${{ runner.os }}-gopath-
 
       - name: Cache GOCACHE folder
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.gocache.outputs.dir }}
           key: ${{ runner.os }}-gocache-${{ hashFiles(format('{0}{1}', github.workspace, '/go.sum')) }}
