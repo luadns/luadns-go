@@ -56,4 +56,38 @@ func main() {
 			fmt.Println("    ", r.Name, r.Type, r.Content, r.TTL)
 		}
 	}
+
+	if len(zones) == 0 {
+		fmt.Println("===> No zones found, skipping other tests")
+	}
+
+	zone := zones[0]
+	name := "foo." + zone.Name + "."
+
+	fmt.Println("===> create many")
+	created, err := c.CreateManyRecords(ctx, zone, []*api.RR{{Name: name, Type: "TXT", Content: "foo"}})
+	if err != nil {
+		log.Fatalln(err)
+	}
+	for _, r := range created {
+		fmt.Println("    ", r.Name, r.Type, r.Content, r.TTL)
+	}
+
+	fmt.Println("===> update many")
+	updated, err := c.UpdateManyRecords(ctx, zone, []*api.RR{{Name: name, Type: "TXT", Content: "bar"}})
+	if err != nil {
+		log.Fatalln(err)
+	}
+	for _, r := range updated {
+		fmt.Println("    ", r.Name, r.Type, r.Content, r.TTL)
+	}
+
+	fmt.Println("===> delete many")
+	deleted, err := c.DeleteManyRecords(ctx, zone, []*api.RR{{Name: name, Type: "TXT"}})
+	if err != nil {
+		log.Fatalln(err)
+	}
+	for _, r := range deleted {
+		fmt.Println("    ", r.Name, r.Type, r.Content, r.TTL)
+	}
 }

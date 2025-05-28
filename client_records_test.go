@@ -110,3 +110,69 @@ func TestDeleteRecordEndpoint(t *testing.T) {
 	assert.Equal(t, record.Content, "1.1.1.1")
 	assert.Equal(t, record.TTL, uint32(86400))
 }
+
+func TestCreateManyRecordsEndpoint(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sendHTTPFixture(t, "/zones/5/records/create_many", w, r)
+	}))
+	defer server.Close()
+
+	c := luadns.NewClient("joe@example.com", "password", luadns.SetBaseURL(server.URL))
+	f := []*luadns.RR{{Name: "foo.example.org.", Type: "TXT", Content: "foo", TTL: 3600}}
+
+	records, err := c.CreateManyRecords(context.Background(), &luadns.Zone{ID: 5}, f)
+	assert.NoError(t, err)
+	assert.Len(t, records, 1)
+
+	record := records[0]
+	assert.NoError(t, err)
+	assert.Equal(t, record.ID, int64(185177165))
+	assert.Equal(t, record.Name, "foo.example.org.")
+	assert.Equal(t, record.Type, "TXT")
+	assert.Equal(t, record.Content, "foo")
+	assert.Equal(t, record.TTL, uint32(3600))
+}
+
+func TestUpdateManyRecordsEndpoint(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sendHTTPFixture(t, "/zones/5/records.update_many", w, r)
+	}))
+	defer server.Close()
+
+	c := luadns.NewClient("joe@example.com", "password", luadns.SetBaseURL(server.URL))
+	f := []*luadns.RR{{Name: "foo.example.org.", Type: "TXT", Content: "bar", TTL: 3600}}
+
+	records, err := c.UpdateManyRecords(context.Background(), &luadns.Zone{ID: 5}, f)
+	assert.NoError(t, err)
+	assert.Len(t, records, 1)
+
+	record := records[0]
+	assert.NoError(t, err)
+	assert.Equal(t, record.ID, int64(185177166))
+	assert.Equal(t, record.Name, "foo.example.org.")
+	assert.Equal(t, record.Type, "TXT")
+	assert.Equal(t, record.Content, "bar")
+	assert.Equal(t, record.TTL, uint32(3600))
+}
+
+func TestDeleteManyRecordsEndpoint(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sendHTTPFixture(t, "/zones/5/records/delete_many", w, r)
+	}))
+	defer server.Close()
+
+	c := luadns.NewClient("joe@example.com", "password", luadns.SetBaseURL(server.URL))
+	f := []*luadns.RR{{Name: "foo.example.org.", Type: "TXT"}}
+
+	records, err := c.DeleteManyRecords(context.Background(), &luadns.Zone{ID: 5}, f)
+	assert.NoError(t, err)
+	assert.Len(t, records, 1)
+
+	record := records[0]
+	assert.NoError(t, err)
+	assert.Equal(t, record.ID, int64(185177166))
+	assert.Equal(t, record.Name, "foo.example.org.")
+	assert.Equal(t, record.Type, "TXT")
+	assert.Equal(t, record.Content, "bar")
+	assert.Equal(t, record.TTL, uint32(3600))
+}
